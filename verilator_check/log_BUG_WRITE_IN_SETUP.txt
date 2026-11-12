@@ -1,0 +1,11 @@
+  SCB ERROR @340000: rdata exp 00000002 got 00000004 addr=08
+  SCB ERROR @400000: rdata exp 00000002 got 00000004 addr=08
+  SCB ERROR @590000: waits exp 0 got 1 addr=00 wr=1 ctrl=00000000
+SCOREBOARD: 7076 checks, 349 errors (first at 0 ns)
+SVA failures: 0
+COVERAGE holes (addr x dir, waits): 0  resets=93  err_hits=785
+RESULT: FAILED
+- tb_plain.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 130us; walltime 63.609 s; speed 194.236 us/s
+- Verilator: cpu 0.670 s on 1 threads; allocated 7 MB

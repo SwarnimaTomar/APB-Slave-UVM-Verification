@@ -1,0 +1,4 @@
+  SCB ERROR @370000: pslverr exp 1 got 0 addr=08 wr=1
+[375000] %Error: apb_if.sv:105: Assertion failed in tb_plain.vif.a_ro_write_err: ASSERT FAIL: a_ro_write_err (write to read-only register, no PSLVERR)
+%Error: ../sva/apb_if.sv:105: Verilog $stop
+Aborting...

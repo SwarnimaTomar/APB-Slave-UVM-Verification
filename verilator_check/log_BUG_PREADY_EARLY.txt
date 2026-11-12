@@ -1,0 +1,11 @@
+  SCB ERROR @810000: waits exp 3 got 2 addr=04 wr=0 ctrl=00000003
+  SCB ERROR @860000: waits exp 3 got 2 addr=0c wr=1 ctrl=00000003
+  SCB ERROR @910000: waits exp 3 got 2 addr=00 wr=0 ctrl=00000003
+SCOREBOARD: 7076 checks, 729 errors (first at 0 ns)
+SVA failures: 0
+COVERAGE holes (addr x dir, waits): 1  resets=93  err_hits=785
+RESULT: FAILED
+- tb_plain.sv:98: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.49
+- Verilator: $finish at 122us; walltime 62.114 s; speed 180.874 us/s
+- Verilator: cpu 0.673 s on 1 threads; allocated 7 MB

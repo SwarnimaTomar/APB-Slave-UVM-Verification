@@ -1,0 +1,4 @@
+  SCB ERROR @430000: pslverr exp 1 got 0 addr=40 wr=1
+[435000] %Error: apb_if.sv:96: Assertion failed in tb_plain.vif.a_bad_addr_err: ASSERT FAIL: a_bad_addr_err (bad address, no PSLVERR)
+%Error: ../sva/apb_if.sv:96: Verilog $stop
+Aborting...
