@@ -42,17 +42,19 @@ Coverpoints: address (6 bins incl. unaligned/out-of-map), direction, error respo
 Crosses: address x direction, address x error, direction x wait cycles.
 
 ## Bug injection
-Compile the DUT with one define to inject a bug. Checked with the plain-SV twin testbench in Verilator:
+Each bug is switched on with one define (`-d BUG_xxx` on the `xvlog` line). All runs use `apb_rand_test` (directed checklist + 1000 constrained-random transfers), Vivado 2024.2 xsim, UVM 1.2.
 
-| Define | Bug | Result |
-|---|---|---|
-| (none) | correct DUT | 7076 checks, 0 errors, 0 assertion failures |
-| BUG_PREADY_EARLY | slave answers a cycle early at 3 wait states | scoreboard: 729 errors |
-| BUG_NO_ERR_BAD_ADDR | no PSLVERR on bad address | SVA `a_bad_addr_err` fails at 43.5 ns |
-| BUG_NO_ERR_RO_WRITE | no PSLVERR on write to STATUS | SVA `a_ro_write_err` fails at 37.5 ns |
-| BUG_READ_WRONG | SCRATCH read returns DATA | scoreboard: 356 errors |
-| BUG_WRITE_IN_SETUP | write happens in setup phase | scoreboard: 349 errors |
-| BUG_RESET_SCRATCH | reset does not clear SCRATCH | scoreboard: 83 errors |
+| Define | Bug | Scoreboard errors | SVA failures | Result |
+|---|---|---|---|---|
+| (none) | correct DUT | 0 (2401 checks) | 0 | TEST PASSED |
+| BUG_PREADY_EARLY | slave answers a cycle early at 3 wait states | 139 | 0 | TEST FAILED |
+| BUG_NO_ERR_BAD_ADDR | no PSLVERR on bad address | 175 | 175 | TEST FAILED |
+| BUG_NO_ERR_RO_WRITE | no PSLVERR on write to STATUS | 74 | 74 | TEST FAILED |
+| BUG_READ_WRONG | SCRATCH read returns DATA | 113 | 0 | TEST FAILED |
+| BUG_WRITE_IN_SETUP | write happens in setup phase | 138 | 0 | TEST FAILED |
+| BUG_RESET_SCRATCH | reset does not clear SCRATCH | 32 | 2 | TEST FAILED |
+
+All 6 bugs are caught. The two PSLVERR bugs are caught by both the assertions and the scoreboard.
 
 ## How to run in Vivado 2024.2 (xsim)
 Command line (Vivado command prompt, in the project folder):
@@ -69,6 +71,16 @@ Elaboration: `xsim.elaborate.xelab.more_options` = `-L uvm`; run, then click Run
 
 Expected last lines: `SCOREBOARD: N checks, 0 errors`, `FUNCTIONAL COVERAGE: ...`, `SVA assertion failures: 0`, `TEST PASSED`.
 
-## Verification status (honest)
-- Verified by simulation (Verilator 5.49): DUT, all SVA assertions, constrained-random stimulus, the scoreboard model and all 6 bug injections (table above), using `verilator_check/tb_plain.sv`.
-- NOT yet run: the UVM files (`apb_pkg.sv`, `apb_tb_top.sv`) and the covergroups. Verilator cannot run UVM in reasonable time here and ignores covergroups. Run the xsim commands above once; fix any compile message before posting.
+## Results (correct DUT, Vivado 2024.2 xsim)
+| Test | Checks | Errors | SVA failures | Functional coverage |
+|---|---|---|---|---|
+| apb_directed_test | 78 | 0 | 0 | 99.0% |
+| apb_rand_test | 2401 | 0 | 0 | 100.0% |
+
+Coverage notes: the cross `address x error` excludes impossible combinations with `ignore_bins`
+(a bad address can never answer OK; CTRL/DATA/SCRATCH can never answer ERROR).
+The directed test reaches 99.0% because it never writes to an unaligned address; the random test fills that bin.
+
+## Verification status
+- Everything above was run in Vivado 2024.2 xsim (UVM 1.2): DUT, 11 SVA assertions, scoreboard, covergroups, both tests, all 6 bug injections.
+- `verilator_check/` is an earlier plain-SV twin testbench (no UVM) used for a first sanity check.
