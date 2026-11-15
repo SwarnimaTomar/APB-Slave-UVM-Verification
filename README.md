@@ -1,4 +1,4 @@
-# APB Slave Verification: UVM + SVA Assertions + Functional Coverage
+# APB Slave Verification: UVM + SV Assertions + Functional Coverage
 
 A UVM testbench that verifies an APB slave (4 registers, wait states, error responses).
 Contains constrained-random stimulus, a scoreboard with a register model, SystemVerilog
